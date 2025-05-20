@@ -21,7 +21,8 @@ import { BrandsModule } from './modules/brands/brands.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { FileModule } from './modules/file/file.module';
-import { ComicModule } from './modules/comics/comics.module';
+import { ComicsModule } from './modules/comics/comics.module';
+import { ChapterModule } from './modules/chapters/chapter.module';
 
 @Module({
   imports: [
@@ -37,13 +38,14 @@ import { ComicModule } from './modules/comics/comics.module';
     LocationsModule,
     FileModule,
     BannersModule,
-    ComicModule,
+    ComicsModule,
+    ChapterModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({ 
+      useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],

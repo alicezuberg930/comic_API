@@ -4,7 +4,7 @@ import { ChapterData } from "src/modules/chapters/dto/create-chapter.dto";
 
 export class ComicData {
     @IsNotEmpty({ message: "Tên người dùng không được để trống" })
-    name: string
+    title: string
 
     @IsOptional()
     averageRating: number
@@ -25,5 +25,5 @@ export class ComicData {
     description: string
 
     @IsOptional()
-    chapters: ChapterData[]
+    chapters?: ChapterData | ChapterData[]
 }

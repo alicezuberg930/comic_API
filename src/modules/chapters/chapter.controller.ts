@@ -5,11 +5,11 @@ import { UpdateChapterDto } from './dto/update-chapter.dto';
 
 @Controller('chapter')
 export class ChapterController {
-  constructor(private readonly chapterService: ChapterService) {}
+  constructor(private readonly chapterService: ChapterService) { }
 
   @Post()
-  create(@Body() createChapterDto: ChapterData) {
-    return this.chapterService.create(createChapterDto);
+  create(@Body() createChapterDto: ChapterData | ChapterData[]) {
+    // return this.chapterService.create(createChapterDto);
   }
 
   @Get()

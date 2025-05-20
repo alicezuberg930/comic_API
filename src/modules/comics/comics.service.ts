@@ -4,14 +4,15 @@ import { UpdateComicDto } from './dto/update-comic.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comic } from './schemas/comic.schema';
 import { Model, Types } from 'mongoose';
-import { Chapter } from '../chapters/schemas/chapter.schema';
 import { ChapterService } from '../chapters/chapter.service';
+import { ChapterData } from '../chapters/dto/create-chapter.dto';
+import { Chapter } from '../chapters/schemas/chapter.schema';
 
 @Injectable()
 export class ComicService {
   constructor(
     @InjectModel(Comic.name) private comicModel: Model<Comic>,
-    // @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
+    @InjectModel(Chapter.name) private chapterModel: Model<Chapter>,
     private chapterService: ChapterService
   ) { }
 
@@ -19,7 +20,8 @@ export class ComicService {
     try {
       const comic = await this.comicModel.create(data)
       if (data.chapters) {
-        await this.chapterService.create(data.chapters)
+        // let chapters: ChapterData | ChapterData[]
+        await this.chapterService.create(data.chapters, comic.id)
       }
       return comic
     } catch (error) {
@@ -36,8 +38,19 @@ export class ComicService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comic`;
+  async findOne(id: string) {
+    try {
+      return await this.comicModel
+        .findById(id)
+        .populate({
+          path: 'chapters',
+          model: this.chapterModel,
+          options: { sort: { chapterNumber: 1 } },
+        })
+        .lean()
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
   async update(comicId: string, chapterId: string, updateComicDto: ComicData) {

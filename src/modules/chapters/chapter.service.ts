@@ -3,7 +3,7 @@ import { ChapterData } from './dto/create-chapter.dto';
 import { UpdateChapterDto } from './dto/update-chapter.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chapter } from './schemas/chapter.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class ChapterService {
@@ -11,15 +11,18 @@ export class ChapterService {
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>
   ) { }
 
-  async create(data: ChapterData | ChapterData[]) {
+  async create(data: ChapterData | ChapterData[], comicId: string) {
     try {
-      // if (Array.isArray(data)) {
-      //   for (let i = 0; i < data.length; i++) {
-      //     await this.chapterModel.create(data)
-      //   }
-      // } else {
-      await this.chapterModel.create(data)
-      // }
+      let chapters = {}
+      const ref = new Types.ObjectId(comicId)
+      if (Array.isArray(data)) {
+        chapters = data.map((chapter: ChapterData) => ({
+          ...chapter, comicId: ref
+        }));
+      } else {
+        chapters = { ...data, comicId: ref }
+      }
+      await this.chapterModel.create(chapters)
     } catch (error) {
       throw new BadRequestException(error)
     }

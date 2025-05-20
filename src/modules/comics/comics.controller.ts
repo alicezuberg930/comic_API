@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ComicService } from './comics.service';
-import { ChapterData, ComicData } from './dto/create-comic.dto';
+import { ComicData } from './dto/create-comic.dto';
 import { UpdateComicDto } from './dto/update-comic.dto';
 
 @Controller('comic')
@@ -19,7 +19,7 @@ export class ComicController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.comicService.findOne(+id);
+    return this.comicService.findOne(id);
   }
 
   @Patch(':comidId/:chapterId')

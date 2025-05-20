@@ -1,4 +1,5 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty, IsOptional } from "class-validator"
+import { Types } from "mongoose"
 
 export class ChapterData {
     @IsNotEmpty({ message: "Tên chương không được để trống" })
@@ -9,4 +10,7 @@ export class ChapterData {
 
     @IsNotEmpty({ message: "Ảnh chương không được để trống" })
     images: string[]
+
+    @IsOptional()
+    comicId: string
 }

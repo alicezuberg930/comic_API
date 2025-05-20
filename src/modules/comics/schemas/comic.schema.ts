@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { status } from "../dto/enum"
+import { Document } from "mongoose"
 
 @Schema({ timestamps: true })
 export class Comic extends Document {
@@ -9,7 +10,7 @@ export class Comic extends Document {
     @Prop()
     cover: string
 
-    @Prop({ type: status })
+    @Prop({ enum: status })
     status: string
 
     @Prop({ default: 0 })
@@ -25,4 +26,13 @@ export class Comic extends Document {
     description: string
 }
 
-export const ComicSchema = SchemaFactory.createForClass(Comic)
+const ComicSchema = SchemaFactory.createForClass(Comic)
+
+ComicSchema.virtual('chapters', {
+    ref: 'Chapter', // Reference the Chapter model
+    localField: '_id', // Field in Comic schema to match
+    foreignField: 'comicId', // Field in Chapter schema to match
+    options: { sort: { chapterNumber: 1 } }, // Sort chapters by chapterNumber
+});
+
+export { ComicSchema }

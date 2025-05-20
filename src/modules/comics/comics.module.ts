@@ -17,4 +17,4 @@ import { ChapterService } from '../chapters/chapter.service';
   controllers: [ComicController],
   providers: [ComicService, ChapterService],
 })
-export class ComicModule { }
+export class ComicsModule { }

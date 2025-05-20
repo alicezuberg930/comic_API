@@ -12,7 +12,7 @@ export class Chapter extends Document {
     @Prop({ default: [] })
     images: string[]
 
-    @Prop({ type: Types.ObjectId, ref: 'Comic', required: true })
+    @Prop({ type: Types.ObjectId, ref: 'Comic' })
     comicId: Types.ObjectId;
 }
 

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ComicService } from './comic.service';
+import { ComicService } from './comics.service';
 import { ChapterData, ComicData } from './dto/create-comic.dto';
 import { UpdateComicDto } from './dto/update-comic.dto';
 
@@ -23,7 +23,7 @@ export class ComicController {
   }
 
   @Patch(':comidId/:chapterId')
-  update(@Param('comidId') comicId: string, @Param('chapterId') chapterId: string, @Body() updateComicDto: ChapterData) {
+  update(@Param('comidId') comicId: string, @Param('chapterId') chapterId: string, @Body() updateComicDto: ComicData) {
     return this.comicService.update(comicId, chapterId, updateComicDto);
   }
 

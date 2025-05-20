@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ComicService } from './comic.service';
-import { ComicController } from './comic.controller';
+import { ComicService } from './comics.service';
+import { ComicController } from './comics.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Comic } from './schemas/comic.schema';
 import { ComicSchema } from './schemas/comic.schema';
-import { Chapter, ChapterSchema } from './schemas/chapter.schema';
+import { Chapter, ChapterSchema } from '../chapters/schemas/chapter.schema';
+import { ChapterService } from '../chapters/chapter.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { Chapter, ChapterSchema } from './schemas/chapter.schema';
     ])
   ],
   controllers: [ComicController],
-  providers: [ComicService],
+  providers: [ComicService, ChapterService],
 })
 export class ComicModule { }

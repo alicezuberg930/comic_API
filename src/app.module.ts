@@ -21,7 +21,7 @@ import { BrandsModule } from './modules/brands/brands.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { FileModule } from './modules/file/file.module';
-import { ComicModule } from './modules/comic/comic.module';
+import { ComicModule } from './modules/comics/comics.module';
 
 @Module({
   imports: [

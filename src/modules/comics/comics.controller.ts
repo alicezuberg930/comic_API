@@ -1,15 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, BadRequestException, Req } from '@nestjs/common';
 import { ComicService } from './comics.service';
 import { ComicData } from './dto/create-comic.dto';
 import { UpdateComicDto } from './dto/update-comic.dto';
+import { AnyFilesInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { Public } from 'src/public.decorator';
+import { diskStorage } from 'multer';
+import { Request } from 'express';
 
-@Controller('comic')
+@Controller('comics')
 export class ComicController {
   constructor(private readonly comicService: ComicService) { }
 
   @Post()
-  create(@Body() data: ComicData) {
-    return this.comicService.create(data);
+  @UseInterceptors(AnyFilesInterceptor())
+  async create(
+    @UploadedFiles() files: Express.Multer.File[],
+    // @Req() request: Request
+    @Body('comicData') body: string
+  ) {
+    return this.comicService.create(files, body);
   }
 
   @Get()

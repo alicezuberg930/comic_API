@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Comic } from './schemas/comic.schema';
 import { ComicSchema } from './schemas/comic.schema';
 import { Chapter, ChapterSchema } from '../chapters/schemas/chapter.schema';
-import { ChapterService } from '../chapters/chapter.service';
+import { ChapterService } from '../chapters/chapters.service';
 
 @Module({
   imports: [

@@ -4,7 +4,7 @@ import { UpdateComicDto } from './dto/update-comic.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comic } from './schemas/comic.schema';
 import { Model, Types } from 'mongoose';
-import { ChapterService } from '../chapters/chapter.service';
+import { ChapterService } from '../chapters/chapters.service';
 import { ChapterData } from '../chapters/dto/create-chapter.dto';
 import { Chapter } from '../chapters/schemas/chapter.schema';
 
@@ -16,14 +16,36 @@ export class ComicService {
     private chapterService: ChapterService
   ) { }
 
-  async create(data: ComicData) {
+  async create(files: Express.Multer.File[], body: string) {
     try {
-      const comic = await this.comicModel.create(data)
-      if (data.chapters) {
-        // let chapters: ChapterData | ChapterData[]
-        await this.chapterService.create(data.chapters, comic.id)
+      try {
+        const comicData = body
+        if (!comicData) {
+          throw new BadRequestException('comicData is missing or undefined');
+        }
+        const chapterFilesMap: { [key: number]: Express.Multer.File[] } = {};
+        files.forEach((file) => {
+          const match = file.fieldname.match(/chapterFiles\[(\d+)\]/);
+          if (match) {
+            const chapterIndex = parseInt(match[1], 10);
+            if (!chapterFilesMap[chapterIndex]) {
+              chapterFilesMap[chapterIndex] = [];
+            }
+            chapterFilesMap[chapterIndex].push(file);
+          }
+        });
+        console.log(chapterFilesMap)
+        return JSON.parse(comicData)
+        // return chapterFilesMap
+      } catch (error) {
+        throw new BadRequestException(error)
       }
-      return comic
+      // const comic = await this.comicModel.create(data)
+      // if (data.chapters) {
+      //   // let chapters: ChapterData | ChapterData[]
+      //   await this.chapterService.create(data.chapters, comic.id)
+      // }
+      // return comic
     } catch (error) {
       throw new BadRequestException(error)
     }

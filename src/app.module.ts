@@ -22,7 +22,7 @@ import { BannersModule } from './modules/banners/banners.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { FileModule } from './modules/file/file.module';
 import { ComicsModule } from './modules/comics/comics.module';
-import { ChapterModule } from './modules/chapters/chapter.module';
+import { ChapterModule } from './modules/chapters/chapters.module';
 
 @Module({
   imports: [
@@ -80,7 +80,7 @@ import { ChapterModule } from './modules/chapters/chapter.module';
   controllers: [AppController],
   providers: [
     AppService,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
     { provide: APP_FILTER, useClass: AllExceptionsFilter }
   ],

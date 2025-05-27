@@ -16,7 +16,7 @@ export class ComicService {
     private chapterService: ChapterService
   ) { }
 
-  async create(files: Express.Multer.File[], body: string) {
+  async create(files: Express.Multer.File[], body: ComicData) {
     try {
       try {
         const comicData = body
@@ -34,18 +34,14 @@ export class ComicService {
             chapterFilesMap[chapterIndex].push(file);
           }
         });
-        console.log(chapterFilesMap)
-        return JSON.parse(comicData)
-        // return chapterFilesMap
+        const comic = await this.comicModel.create(comicData)
+        if (comicData.chapters) {
+          await this.chapterService.create(comicData.chapters, comic.id)
+        }
+        return comic
       } catch (error) {
         throw new BadRequestException(error)
       }
-      // const comic = await this.comicModel.create(data)
-      // if (data.chapters) {
-      //   // let chapters: ChapterData | ChapterData[]
-      //   await this.chapterService.create(data.chapters, comic.id)
-      // }
-      // return comic
     } catch (error) {
       throw new BadRequestException(error)
     }

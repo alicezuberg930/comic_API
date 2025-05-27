@@ -16,9 +16,11 @@ export class ComicController {
   async create(
     @UploadedFiles() files: Express.Multer.File[],
     // @Req() request: Request
-    @Body('comicData') body: string
+    @Body() body: string
   ) {
-    return this.comicService.create(files, body);
+    return body
+    // const data: ComicData = JSON.parse(body)
+    // return this.comicService.create(files, data);
   }
 
   @Get()

@@ -29,6 +29,8 @@
     "@nestjs/mongoose": "10.0.10",
     "@nestjs/passport": "10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.0.0",
+    "@nestjs/websockets": "^10.4.13",
     "@types/bcrypt": "5.0.2",
     "@types/nodemailer": "6.4.17",
     "@types/passport-jwt": "4.0.1",

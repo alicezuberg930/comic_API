@@ -11,17 +11,13 @@ export class ChapterService {
     @InjectModel(Chapter.name) private chapterModel: Model<Chapter>
   ) { }
 
-  async create(data: ChapterData | ChapterData[], comicId: string) {
+  async create(data: ChapterData[], comicId: string) {
     try {
       let chapters = {}
       const ref = new Types.ObjectId(comicId)
-      if (Array.isArray(data)) {
-        chapters = data.map((chapter: ChapterData) => ({
-          ...chapter, comicId: ref
-        }));
-      } else {
-        chapters = { ...data, comicId: ref }
-      }
+      chapters = data.map((chapter: ChapterData) => ({
+        ...chapter, comicId: ref
+      }));
       await this.chapterModel.create(chapters)
     } catch (error) {
       throw new BadRequestException(error)

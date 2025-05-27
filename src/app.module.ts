@@ -23,6 +23,7 @@ import { LocationsModule } from './modules/locations/locations.module';
 import { FileModule } from './modules/file/file.module';
 import { ComicsModule } from './modules/comics/comics.module';
 import { ChapterModule } from './modules/chapters/chapters.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ChapterModule } from './modules/chapters/chapters.module';
     BannersModule,
     ComicsModule,
     ChapterModule,
+    ChatModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule

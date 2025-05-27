@@ -1,6 +1,7 @@
-import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, ValidateNested } from "class-validator";
 import { status } from "./enum";
 import { ChapterData } from "src/modules/chapters/dto/create-chapter.dto";
+import { Type } from "class-transformer";
 
 export class ComicData {
     @IsNotEmpty({ message: "Tên người dùng không được để trống" })
@@ -25,5 +26,7 @@ export class ComicData {
     description: string
 
     @IsOptional()
-    chapters?: ChapterData | ChapterData[]
+    @ValidateNested({ each: true }) // Ensures validation for each item in the array
+    @Type(() => ChapterData) // Specifies the class type for transformation
+    chapters: ChapterData[]
 }

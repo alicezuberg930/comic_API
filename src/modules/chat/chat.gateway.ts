@@ -1,58 +1,51 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, WebSocketServer, OnGatewayDisconnect } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, WebSocketServer, OnGatewayDisconnect, ConnectedSocket } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(4001, {
-  cors: {
-    origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
+@WebSocketGateway({
+    cors: {
+        origin: ["http://192.168.1.162:3000", "http://localhost:3000"],
+        methods: ['GET', 'POST'],
+        credentials: true,
+    },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly chatService: ChatService) { }
+    constructor(private readonly chatService: ChatService) { }
 
-  @WebSocketServer()
-  server: Server
+    @WebSocketServer()
+    server: Server
 
-  handleConnection(client: Socket) {
-    console.log(client.id + " has connected")
-    client.broadcast.emit('connect', {
-      message: `client ${client.id} has connected`
-    })
-  }
+    handleConnection(client: Socket) {
+        console.log(client.id + " has connected")
+        this.server.to(client.id).emit('connected', {
+            socketId: client.id,
+            message: `client ${client.id} has connected`
+        })
+    }
 
-  handleDisconnect(client: Socket) {
-    console.log(client.id + " has disconnected")
-    client.broadcast.emit('disconnect', {
-      message: `client ${client.id} has disconnected`
-    })
-  }
+    handleDisconnect(client: Socket) {
+        console.log(client.id + " has disconnected")
+        client.emit('disconnected', {
+            message: `client ${client.id} has disconnected`
+        })
+    }
 
-  @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto, this.server);
-  }
+    users: { email: string, socketId: string, roomId: string }[] = []
 
-  @SubscribeMessage('findAllChat')
-  findAll() {
-    return this.chatService.findAll();
-  }
+    @SubscribeMessage('callUser')
+    callUser(@MessageBody() data: { userToCall: string, signal: any, from: string, name: string }, @ConnectedSocket() client: Socket) {
+        console.log("CALled to; " + data.userToCall)
+        if (data.userToCall) {
+            this.server.to(data.userToCall).emit('callUser', { signal: data.signal, from: data.from, name: data.name })
+        }
+    }
 
-  @SubscribeMessage('findOneChat')
-  findOne(@MessageBody() id: number) {
-    return this.chatService.findOne(id);
-  }
-
-  @SubscribeMessage('updateChat')
-  update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(updateChatDto.id, updateChatDto);
-  }
-
-  @SubscribeMessage('removeChat')
-  remove(@MessageBody() id: number) {
-    return this.chatService.remove(id);
-  }
+    @SubscribeMessage('answerCall')
+    answerCall(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+        console.log("CALled to; " + data.to)
+        if (data.to) {
+            this.server.to(data.to).emit('callAccepted', { signal: data.signal })
+        }
+    }
 }

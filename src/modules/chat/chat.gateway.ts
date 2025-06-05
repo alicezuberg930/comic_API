@@ -5,7 +5,7 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
     cors: {
-        origin: ["http://192.168.1.162:3000", "http://localhost:3000"],
+        origin: ["http://192.168.1.162:3000", "http://localhost:3000", "https://react-video-website-ten.vercel.app"],
         methods: ['GET', 'POST'],
         credentials: true,
     },
